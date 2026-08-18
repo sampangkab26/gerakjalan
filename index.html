@@ -32,7 +32,7 @@
 
 <script>
     // >>> GANTI HANYA BARIS INI KALAU LINK DEPLOY APPS SCRIPT ANDA BERUBAH <<<
-    const DEPLOY_URL = "https://script.google.com/macros/s/AKfycbyw3JOS_qRSjm2OkyFNKgev4S2ZPU1Rsy2BrK9L5MeHO4poZ8ynX6p_JnCrZ669rfSn/exec";
+    const DEPLOY_URL = "https://script.google.com/macros/s/AKfycbzt6IBNBzSrFB6hGCvNhERzIpawZVMe-nNzUuFFfVL8VdIptP582TM9YgveHbl394NT/exec";
 </script>
 
 <style>
@@ -82,12 +82,6 @@
         font-weight: 700; font-size: 14px; padding: 12px 22px; border-radius: 10px;
         box-shadow: 0 4px 12px rgba(67,56,202,.25);
     }
-    #openNewTabBar {
-        position: fixed; bottom: 14px; right: 14px; z-index: 15;
-        background: rgba(15,23,42,.85); color: #fff; font-size: 11px; font-weight: 600;
-        padding: 8px 12px; border-radius: 999px; text-decoration: none;
-        display: flex; align-items: center; gap: 6px; backdrop-filter: blur(4px);
-    }
 </style>
 </head>
 <body>
@@ -105,27 +99,20 @@
 
     <iframe id="appFrame" title="Aplikasi Penilaian Gerak Jalan" allow="clipboard-write"></iframe>
 
-    <a id="openNewTabBar" href="#" target="_blank" rel="noopener">
-        <span>&#8599;</span> Buka di Tab Baru
-    </a>
-
 <script>
     const frame = document.getElementById('appFrame');
     const loadingScreen = document.getElementById('loadingScreen');
     const fallbackScreen = document.getElementById('fallbackScreen');
     const fallbackLink = document.getElementById('fallbackOpenLink');
-    const newTabBar = document.getElementById('openNewTabBar');
 
-    const isUrlFilled = DEPLOY_URL && !DEPLOY_URL.includes('AKfycbxXkPCY3ji8WAnofV8g80OeiuRdWOb1RIbSHl0dy8LOMJaiLdgFfscqvEtjRotOU-6j');
+    const isUrlFilled = DEPLOY_URL && !DEPLOY_URL.includes('AKfycbzt6IBNBzSrFB6hGCvNhERzIpawZVMe-nNzUuFFfVL8VdIptP582TM9YgveHbl394NT');
 
     fallbackLink.href = DEPLOY_URL || '#';
-    newTabBar.href = DEPLOY_URL || '#';
 
     function showFallback() {
         loadingScreen.classList.add('hide');
         fallbackScreen.classList.add('show');
         frame.style.display = 'none';
-        newTabBar.style.display = 'none';
     }
 
     if (!isUrlFilled) {
