@@ -8,26 +8,26 @@
 <!-- =========================================================================
      CARA PAKAI (BACA INI DULU)
      =========================================================================
-     File ini HANYA "jendela" yang menampilkan aplikasi asli dari Google Apps
-     Script secara penuh layar. Isi aplikasinya (fitur, tampilan, dsb) SELALU
-     diambil langsung dari link deploy Apps Script setiap kali halaman ini
-     dibuka — jadi:
+     Halaman ini otomatis MENGALIHKAN (redirect) ke aplikasi asli di Google
+     Apps Script begitu dibuka — bukan menampilkannya di dalam jendela/iframe.
+     Ini sengaja dipilih karena Google memblokir tampilan iframe untuk link
+     Apps Script (halaman perantara di script.google.com miliknya sendiri
+     tidak bisa diizinkan tampil di iframe, terlepas dari pengaturan apa pun
+     di Code.gs Anda) — jadi redirect adalah cara paling andal.
+
+     Yang perlu Anda lakukan tetap SAMA SEDERHANANYA seperti sebelumnya:
 
         - Ada perubahan fitur/tampilan di Apps Script?
           -> CUKUP update Code.gs / Index.html di Apps Script editor & simpan
-             seperti biasa. File index.html di GitHub ini TIDAK PERLU disentuh
-             sama sekali. Cukup refresh browser untuk lihat versi terbaru.
+             seperti biasa. File index.html di GitHub ini TIDAK PERLU disentuh.
 
-        - Link deploy Apps Script-nya sendiri yang berubah (misal Anda
-          membuat deployment baru dari awal, bukan "Manage Deployments >
-          Edit > New Version")?
-          -> Baru di sini, di GitHub, Anda perlu ganti SATU baris di bawah
-             ini (variabel DEPLOY_URL), lalu upload ulang file ini.
+        - Link deploy Apps Script-nya sendiri yang berubah?
+          -> Baru di sini Anda ganti SATU baris di bawah ini (DEPLOY_URL),
+             lalu upload ulang file ini ke GitHub.
 
      Supaya link deploy jarang berubah, saat deploy di Apps Script gunakan:
      Deploy > Manage deployments > (pilih deployment aktif) > Edit (ikon
-     pensil) > pilih "New version" > Deploy.
-     JANGAN klik "New deployment" (itu akan membuat link BARU yang beda).
+     pensil) > pilih "New version" > Deploy. JANGAN klik "New deployment".
      ========================================================================= -->
 
 <script>
@@ -39,97 +39,51 @@
     * { box-sizing: border-box; }
     html, body {
         margin: 0; padding: 0; width: 100%; height: 100%;
-        overflow: hidden; background: #f8fafc;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+        background: #4338ca; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+        display: flex; align-items: center; justify-content: center;
     }
-
-    /* Iframe mengisi seluruh layar & otomatis menyesuaikan ukuran perangkat
-       (HP, tablet, laptop) karena browser menghitung ulang 100vw/100vh
-       setiap kali ukuran viewport berubah — dan aplikasi di dalamnya sendiri
-       memang sudah dibangun responsif mengikuti lebar layar ini. */
-    #appFrame {
-        position: fixed; top: 0; left: 0;
-        width: 100vw; height: 100vh;
-        border: 0; display: block;
-        background: #f8fafc;
-    }
-
-    #loadingScreen {
-        position: fixed; inset: 0; z-index: 10;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        gap: 14px; background: #4338ca; color: #fff;
-        transition: opacity .35s ease;
-    }
-    #loadingScreen.hide { opacity: 0; pointer-events: none; }
+    .wrap { text-align: center; color: #fff; padding: 24px; }
     .spinner {
-        width: 40px; height: 40px; border-radius: 50%;
+        width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 16px;
         border: 4px solid rgba(255,255,255,0.25); border-top-color: #fff;
         animation: spin .8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-    #loadingScreen p { font-size: 13px; font-weight: 600; letter-spacing: .3px; opacity: .9; }
+    .wrap p { font-size: 13px; font-weight: 600; letter-spacing: .3px; opacity: .9; margin: 0; }
 
     #fallbackScreen {
-        position: fixed; inset: 0; z-index: 20;
-        display: none; flex-direction: column; align-items: center; justify-content: center;
-        gap: 14px; background: #f8fafc; color: #334155; text-align: center; padding: 24px;
+        display: none; text-align: center; color: #1e293b; padding: 24px; max-width: 380px;
     }
-    #fallbackScreen.show { display: flex; }
-    #fallbackScreen h2 { margin: 0; font-size: 17px; color: #1e293b; }
-    #fallbackScreen p { margin: 0; font-size: 13px; color: #64748b; max-width: 360px; line-height: 1.5; }
+    #fallbackScreen.show { display: block; }
+    #fallbackScreen h2 { margin: 0 0 8px; font-size: 17px; }
+    #fallbackScreen p { margin: 0; font-size: 13px; color: #64748b; line-height: 1.5; }
     #fallbackScreen a {
-        margin-top: 6px; text-decoration: none; background: #4338ca; color: #fff;
+        display: inline-block; margin-top: 14px; text-decoration: none; background: #fff; color: #4338ca;
         font-weight: 700; font-size: 14px; padding: 12px 22px; border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(67,56,202,.25);
     }
 </style>
 </head>
 <body>
 
-    <div id="loadingScreen">
+    <div class="wrap" id="loadingScreen">
         <div class="spinner"></div>
-        <p>Memuat Aplikasi Penilaian Gerak Jalan…</p>
+        <p>Mengalihkan ke Aplikasi Penilaian Gerak Jalan…</p>
     </div>
 
     <div id="fallbackScreen">
-        <h2>Aplikasi belum bisa ditampilkan di sini</h2>
-        <p>Link deploy belum diisi, sudah tidak aktif, atau browser Anda memblokir tampilan tertanam. Silakan buka aplikasi langsung lewat tombol di bawah ini.</p>
-        <a id="fallbackOpenLink" href="#" target="_blank" rel="noopener">Buka Aplikasi</a>
+        <h2>Link deploy belum diisi</h2>
+        <p>Buka file index.html ini, isi variabel DEPLOY_URL dengan link deploy Apps Script Anda, lalu upload ulang.</p>
     </div>
 
-    <iframe id="appFrame" title="Aplikasi Penilaian Gerak Jalan" allow="clipboard-write"></iframe>
-
 <script>
-    const frame = document.getElementById('appFrame');
-    const loadingScreen = document.getElementById('loadingScreen');
-    const fallbackScreen = document.getElementById('fallbackScreen');
-    const fallbackLink = document.getElementById('fallbackOpenLink');
-
     const isUrlFilled = DEPLOY_URL && !DEPLOY_URL.includes('AKfycbwAdnXyMSk9WccPfbT9qY9MuSMw7534eb4MF6tk9Ppocw1UZpI9BZeNglYzCjmBhb78');
 
-    fallbackLink.href = DEPLOY_URL || '#';
-
-    function showFallback() {
-        loadingScreen.classList.add('hide');
-        fallbackScreen.classList.add('show');
-        frame.style.display = 'none';
-    }
-
     if (!isUrlFilled) {
-        showFallback();
+        document.getElementById('loadingScreen').style.display = 'none';
+        document.getElementById('fallbackScreen').classList.add('show');
     } else {
-        let loaded = false;
-
-        frame.addEventListener('load', () => {
-            loaded = true;
-            loadingScreen.classList.add('hide');
-        });
-
-        frame.src = DEPLOY_URL;
-
-        // Kalau dalam 8 detik iframe tidak pernah selesai loading (link salah/mati/diblokir),
-        // tampilkan layar fallback dengan tombol buka langsung.
-        setTimeout(() => { if (!loaded) showFallback(); }, 8000);
+        // replace() dipakai supaya halaman wrapper ini tidak masuk riwayat "Back" browser
+        window.location.replace(DEPLOY_URL);
     }
 </script>
 
